@@ -1,65 +1,140 @@
-# 🔐 Autenticación con Google OAuth en PHP
+# 🔐 PHP Google OAuth Authentication
 
-Aplicación simple de PHP que permite a los usuarios iniciar sesión con su cuenta de Google utilizando OAuth 2.0.
+> Aplicación PHP completa que implementa autenticación OAuth 2.0 con Google, perfecta para aprender el flujo de autenticación y como base para proyectos reales.
 
-## 📋 Requisitos Previos
+[![PHP Version](https://img.shields.io/badge/PHP-%3E%3D7.4-blue.svg)](https://php.net)
+[![Google API Client](https://img.shields.io/badge/Google%20API%20Client-v2.15-green.svg)](https://github.com/googleapis/google-api-php-client)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-- PHP 7.4 o superior
-- Composer
-- Cuenta de Google Cloud Platform
+## 📖 Tabla de Contenidos
 
-## 🚀 Instalación
+- [Características](#-características)
+- [Requisitos](#-requisitos)
+- [Instalación Rápida](#-instalación-rápida)
+- [Configuración Detallada](#-configuración-detallada)
+- [Uso del Código](#-uso-del-código)
+- [Estructura del Proyecto](#-estructura-del-proyecto)
+- [API Reference](#-api-reference)
+- [Ejemplos de Integración](#-ejemplos-de-integración)
+- [Troubleshooting](#-troubleshooting)
+- [Deployment](#-deployment)
+- [Contribuir](#-contribuir)
 
-### 1. Instalar Dependencias
+## ✨ Características
+
+- ✅ **OAuth 2.0 completo** - Implementación del flujo Authorization Code
+- ✅ **Datos de usuario** - Obtiene email, nombre, foto y más información
+- ✅ **Sesiones seguras** - Manejo robusto de sesiones PHP
+- ✅ **UI moderna** - Interfaz limpia y responsive
+- ✅ **Manejo de errores** - Páginas de error amigables y debugging
+- ✅ **Tokens persistentes** - Soporte para refresh tokens
+- ✅ **Fácil integración** - Listo para conectar con bases de datos
+- ✅ **Documentación completa** - Código comentado y guías detalladas
+
+## 📋 Requisitos
+
+- **PHP**: 7.4 o superior (recomendado: 8.1+)
+- **Composer**: Para gestión de dependencias
+- **Cuenta Google Cloud**: Para credenciales OAuth
+- **Servidor web**: Apache, Nginx o servidor integrado de PHP
+
+## 🚀 Instalación Rápida
+
+### 1. Clonar el Repositorio
+
+```bash
+git clone https://github.com/maximofernandezriera/php-google-auth.git
+cd php-google-auth
+```
+
+### 2. Instalar Dependencias
 
 ```bash
 composer install
 ```
 
-Esto instalará el paquete `google/apiclient` necesario para la autenticación OAuth.
-
-### 2. Configurar Google Cloud Console
-
-#### a) Crear un Proyecto
-
-1. Ve a [Google Cloud Console](https://console.cloud.google.com/)
-2. Crea un nuevo proyecto o selecciona uno existente
-3. Anota el nombre del proyecto
-
-#### b) Habilitar la API de Google+
-
-1. En el menú lateral, ve a **APIs y servicios** > **Biblioteca**
-2. Busca "Google+ API" o "Google OAuth2 API"
-3. Haz clic en **Habilitar**
-
-#### c) Crear Credenciales OAuth 2.0
-
-1. Ve a **APIs y servicios** > **Credenciales**
-2. Haz clic en **Crear credenciales** > **ID de cliente de OAuth**
-3. Si es la primera vez, configura la **pantalla de consentimiento OAuth**:
-   - Tipo de usuario: **Externo** (para pruebas)
-   - Nombre de la aplicación: El nombre que verán los usuarios
-   - Correo electrónico de asistencia: Tu email
-   - Ámbitos: Agrega `email` y `profile`
-   - Guarda y continúa
-
-4. Vuelve a **Crear credenciales** > **ID de cliente de OAuth**
-5. Tipo de aplicación: **Aplicación web**
-6. Nombre: "PHP Google Auth"
-7. **URIs de redirección autorizados**: Agrega:
-   - `http://localhost:8000/redirect.php`
-   - (Si usas otro puerto o dominio, ajústalo)
-8. Haz clic en **Crear**
-9. **Copia el ID de cliente y el Secreto de cliente**
-
 ### 3. Configurar Credenciales
 
-Edita el archivo `config.php` y reemplaza los valores:
+```bash
+# Copiar plantilla de configuración
+cp config.example.php config.php
+
+# Editar con tus credenciales (ver sección siguiente)
+nano config.php  # o tu editor favorito
+```
+
+### 4. Ejecutar
+
+```bash
+# Servidor integrado de PHP
+php -S localhost:8000
+
+# Abrir en navegador
+open http://localhost:8000  # macOS
+# o visita manualmente http://localhost:8000
+```
+
+## ⚙️ Configuración Detallada
+
+### Paso 1: Crear Proyecto en Google Cloud Console
+
+1. **Acceder a Google Cloud Console**
+   ```
+   https://console.cloud.google.com/
+   ```
+
+2. **Crear nuevo proyecto**
+   - Click en "Nuevo Proyecto"
+   - Nombre: `php-google-auth-demo` (o el que prefieras)
+   - Anotar el Project ID
+
+3. **Habilitar APIs necesarias**
+   ```
+   APIs y servicios > Biblioteca > Buscar:
+   - Google+ API (opcional, para compatibilidad)
+   - Google OAuth2 API
+   ```
+
+### Paso 2: Configurar OAuth 2.0
+
+1. **Pantalla de consentimiento OAuth**
+   ```
+   APIs y servicios > Pantalla de consentimiento OAuth
+   
+   Configuración:
+   - Tipo de usuario: "Externo" (para desarrollo)
+   - Nombre de la aplicación: "PHP Google Auth Demo"
+   - Email de asistencia: tu-email@gmail.com
+   - Dominios autorizados: localhost (opcional para desarrollo)
+   - Ámbitos: ./auth/userinfo.email, ./auth/userinfo.profile
+   ```
+
+2. **Crear credenciales OAuth**
+   ```
+   APIs y servicios > Credenciales > Crear credenciales > ID de cliente OAuth
+   
+   Configuración:
+   - Tipo: "Aplicación web"
+   - Nombre: "PHP OAuth Client"
+   - URIs de redirección autorizados:
+     * http://localhost:8000/redirect.php
+     * http://localhost:3000/redirect.php (opcional)
+     * https://tu-dominio.com/redirect.php (para producción)
+   ```
+
+3. **Obtener credenciales**
+   - Copiar el **Client ID** (termina en `.apps.googleusercontent.com`)
+   - Copiar el **Client Secret** (empieza con `GOCSPX-`)
+
+### Paso 3: Configurar config.php
+
+Edita `config.php` con tus credenciales:
 
 ```php
+<?php
 return [
     'client_id' => 'TU_CLIENT_ID.apps.googleusercontent.com',
-    'client_secret' => 'TU_CLIENT_SECRET',
+    'client_secret' => 'GOCSPX-TU_CLIENT_SECRET',
     'redirect_uri' => 'http://localhost:8000/redirect.php',
     'scopes' => [
         'email',
@@ -68,23 +143,124 @@ return [
 ];
 ```
 
-**⚠️ IMPORTANTE**: Nunca subas `config.php` a un repositorio público. Ya está incluido en `.gitignore`.
+⚠️ **IMPORTANTE**: Nunca commitees `config.php` con credenciales reales.
 
-## 🏃 Ejecutar la Aplicación
+## 💻 Uso del Código
 
-### Opción 1: Servidor PHP integrado
+### Estructura Básica del Flujo
 
-```bash
-php -S localhost:8000
+```php
+// 1. Usuario hace clic en "Login with Google" (index.php)
+$authUrl = $client->createAuthUrl();
+
+// 2. Google redirige a redirect.php con código
+$code = $_GET['code'];
+
+// 3. Intercambiar código por token
+$token = $client->fetchAccessTokenWithAuthCode($code);
+
+// 4. Obtener datos del usuario
+$oauth2 = new Google_Service_Oauth2($client);
+$userInfo = $oauth2->userinfo->get();
+
+// 5. Guardar en sesión
+$_SESSION['user'] = [
+    'id' => $userInfo->id,
+    'email' => $userInfo->email,
+    'name' => $userInfo->name,
+    // ... más datos
+];
 ```
 
-### Opción 2: Apache/Nginx
+### Acceder a Datos del Usuario
 
-Configura tu servidor web para servir el directorio del proyecto.
+Una vez autenticado, puedes acceder a los datos desde cualquier página:
 
-Luego abre tu navegador en: `http://localhost:8000`
+```php
+<?php
+session_start();
 
-## 📂 Estructura del Proyecto
+if (isset($_SESSION['user'])) {
+    $user = $_SESSION['user'];
+    
+    echo "ID de Google: " . $user['id'];           // Único, usar como PK
+    echo "Email: " . $user['email'];               // Verificado por Google
+    echo "Nombre: " . $user['name'];               // Nombre completo
+    echo "Nombre: " . $user['given_name'];         // Solo nombre
+    echo "Apellido: " . $user['family_name'];      // Solo apellido
+    echo "Foto: " . $user['picture'];              // URL de la imagen
+    echo "Email verificado: " . $user['verified_email']; // true/false
+    echo "Idioma: " . $user['locale'];             // ej: 'es', 'en'
+} else {
+    echo "Usuario no autenticado";
+}
+?>
+```
+
+### Integración con Base de Datos
+
+Ejemplo de cómo guardar usuarios en tu BD:
+
+```php
+// En redirect.php, después de obtener $userInfo
+try {
+    $pdo = new PDO('mysql:host=localhost;dbname=tu_bd', $user, $pass);
+    
+    $stmt = $pdo->prepare("
+        INSERT INTO users (google_id, email, name, picture, created_at) 
+        VALUES (?, ?, ?, ?, NOW())
+        ON DUPLICATE KEY UPDATE 
+            email = VALUES(email),
+            name = VALUES(name),
+            picture = VALUES(picture),
+            last_login = NOW()
+    ");
+    
+    $stmt->execute([
+        $userInfo->id,
+        $userInfo->email,
+        $userInfo->name,
+        $userInfo->picture
+    ]);
+    
+    // Obtener ID interno del usuario
+    $_SESSION['internal_user_id'] = $pdo->lastInsertId();
+    
+} catch (PDOException $e) {
+    error_log("Error guardando usuario: " . $e->getMessage());
+}
+```
+
+### Verificar si el Usuario está Logueado
+
+Crea una función helper para usar en todas tus páginas:
+
+```php
+<?php
+function isLoggedIn() {
+    session_start();
+    return isset($_SESSION['user']);
+}
+
+function requireLogin() {
+    if (!isLoggedIn()) {
+        header('Location: index.php');
+        exit;
+    }
+}
+
+function getUser() {
+    return $_SESSION['user'] ?? null;
+}
+
+// Uso en tus páginas protegidas
+requireLogin();
+$user = getUser();
+echo "Hola, " . htmlspecialchars($user['name']);
+?>
+```
+
+## 📁 Estructura del Proyecto
 
 ```
 php-google-auth/
@@ -281,6 +457,32 @@ if (isset($_SESSION['user'])) {
 **Solución**: 
 - Verifica que `session_start()` esté al inicio de cada archivo
 - Comprueba los permisos del directorio de sesiones PHP
+
+## 🐞 Troubleshooting
+
+- **Error 400 / invalid_client / redirect_uri_mismatch**: Verifica que el Client ID, Client Secret y redirect_uri en config.php coincidan exactamente con los registrados en Google Cloud Console.
+- **Página en blanco**: Asegúrate de haber ejecutado `composer install` y que PHP esté en versión >=7.4.
+- **La sesión no persiste**: Comprueba que `session_start()` está presente y que tu PHP guarda sesiones correctamente.
+- **No se muestra el perfil tras login**: Revisa los logs y asegúrate de que el flujo de redirección y el intercambio de token funcionan correctamente.
+
+## 🚢 Deployment
+
+- Para producción, usa HTTPS y actualiza la redirect_uri en config.php y Google Cloud Console.
+- Configura tu servidor web (Apache/Nginx) para servir el proyecto y proteger config.php.
+- Revisa los permisos de archivos y directorios sensibles.
+
+## 🤝 Contribuir
+
+¿Quieres mejorar este proyecto? ¡Bienvenido!
+
+1. Haz un fork y clona tu copia.
+2. Crea una rama con tu mejora: `git checkout -b feature/nueva-funcionalidad`
+3. Haz tus cambios y commitea: `git commit -am "Agrega nueva funcionalidad"`
+4. Haz push y abre un Pull Request.
+
+---
+
+¿Dudas o sugerencias? Abre un issue en GitHub o contacta al autor.
 
 ## 📚 Recursos Adicionales
 
