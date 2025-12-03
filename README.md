@@ -31,6 +31,17 @@
 - ✅ **Fácil integración** - Listo para conectar con bases de datos
 - ✅ **Documentación completa** - Código comentado y guías detalladas
 
+## 📸 Capturas de Pantalla
+
+### Página de Inicio - Login con Google
+![Página de Login](screenshots/login-page.png)
+
+### Pantalla de Consentimiento de Google
+![Consentimiento Google](screenshots/google-consent.png)
+
+### Perfil de Usuario Autenticado
+![Perfil Usuario](screenshots/user-profile.png)
+
 ## 📋 Requisitos
 
 - **PHP**: 7.4 o superior (recomendado: 8.1+)
